@@ -110,9 +110,12 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: replace the base image
-        run: bash -c -- "sed -i 's#gcr.io/distroless/base:debug-nonroot#registry.access.redhat.com/ubi9/ubi-micro#g' rekor/.ko.yaml"
-
-      - name: build and push rekor
         run: |
-          cd rekor
+          bash -c -- "sed -i 's#cgr.dev/chainguard/alpine-base:latest#registry.access.redhat.com/ubi9/ubi-micro#g' scaffolding/.ko.yaml"
+          bash -c -- "sed -i 's#gcr.io/cloudsql-docker/gce-proxy:1.33.1-alpine#registry.access.redhat.com/ubi9/ubi-micro#g' scaffolding/.ko.yaml"
+
+
+      - name: build and push scaffolding
+        run: |
+          cd scaffolding
           KO_PREFIX=quay.io/rcook make ko-resolve
