@@ -118,4 +118,4 @@ jobs:
       - name: build and push scaffolding
         run: |
           cd scaffolding
-          KO_DOCKER_REPO=quay.io/rcook/scaffolding make ko-resolve
+          KO_DOCKER_REPO=quay.io/rcook make ko-resolve
