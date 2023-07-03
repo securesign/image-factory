@@ -1,4 +1,4 @@
-name: Fetchit Build and test
+name: Sigstore Build and test
 
 on:
   push:
@@ -157,7 +157,7 @@ jobs:
       - name: build and push trillian
         run: |
           cd rekor
-          KO_DOCKER_REPO=quay.io/rcook make ko-trillian
+          KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook make ko-trillian
 
   build-tsa:
     runs-on: ubuntu-20.04
