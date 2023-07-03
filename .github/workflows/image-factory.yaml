@@ -59,6 +59,8 @@ jobs:
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/rcook
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
@@ -94,6 +96,8 @@ jobs:
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/rcook
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
@@ -133,6 +137,8 @@ jobs:
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/rcook
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
@@ -165,6 +171,8 @@ jobs:
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/rcook
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
