@@ -92,7 +92,7 @@ jobs:
         with:
           repository: sigstore/scaffolding
           path: scaffolding
-          ref: v1.2.2
+          ref: v0.6.4
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
@@ -167,7 +167,7 @@ jobs:
         with:
           repository: sigstore/timestamp-authority
           path: timestamp-authority
-          ref: v1.2.2
+          ref: v1.1.1
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
