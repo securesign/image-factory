@@ -196,3 +196,23 @@ jobs:
         run: |
           cd timestamp-authority
           KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook make ko  
+
+
+  build-curl:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v2
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: build netcat
+        run: podman build -t quay.io/rcook/netcat:v1.0.0 -f netcat/Dockerfile  
+
+      - name: push netcat
+        run: podman push quay.io/rcook/netcat:v1.0.0
