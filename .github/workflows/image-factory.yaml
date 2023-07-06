@@ -21,7 +21,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sigstore/fulcio
-          ref: main
           path: fulcio
           ref: v1.2.2
 
@@ -55,7 +54,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sigstore/rekor
-          ref: main
           path: rekor
           ref: v1.2.2
 
@@ -93,7 +91,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sigstore/scaffolding
-          ref: main
           path: scaffolding
           ref: v1.2.2
 
@@ -135,7 +132,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sigstore/rekor
-          ref: main
           path: rekor
           ref: v1.2.2
 
@@ -170,7 +166,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sigstore/timestamp-authority
-          ref: main
           path: timestamp-authority
           ref: v1.2.2
 
