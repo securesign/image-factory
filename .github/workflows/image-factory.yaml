@@ -198,7 +198,7 @@ jobs:
           KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook make ko  
 
 
-  build-curl:
+  build-netcat:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
