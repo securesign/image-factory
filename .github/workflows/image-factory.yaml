@@ -125,7 +125,6 @@ jobs:
           KO_DOCKER_REPO=quay.io/rcook make ko-resolve
 
   build-trillian:
-    # NEED TO SWAP BASE IMAGE!
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
@@ -157,7 +156,7 @@ jobs:
       - name: build and push trillian
         run: |
           cd rekor
-          KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook make ko-trillian
+          KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-trillian
 
   build-tsa:
     runs-on: ubuntu-20.04
