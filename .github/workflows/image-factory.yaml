@@ -124,6 +124,40 @@ jobs:
           cd scaffolding
           KO_DOCKER_REPO=quay.io/rcook make ko-resolve
 
+  build-tuf:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v2
+        with:
+          repository: sabre1041/sigstore-scaffolding
+          path: scaffolding
+          ref: scaffolding-standalone
+
+      - name: install ko
+        uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/rcook
+
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: build and push scaffolding
+        run: |
+          cd scaffolding
+          KO_DOCKER_REPO=quay.io/rcook/tuf  KO_PREFIX=quay.io/rcook/tuf KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
+
   build-trillian:
     runs-on: ubuntu-20.04
     steps:
