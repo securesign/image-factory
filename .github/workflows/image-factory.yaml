@@ -76,13 +76,10 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: replace the base image
-        run: bash -c -- "sed -i 's#gcr.io/distroless/base:debug-nonroot#registry.access.redhat.com/ubi9/ubi-micro#g' rekor/.ko.yaml"
-
       - name: build and push rekor
         run: |
           cd rekor
-          KO_PREFIX=quay.io/rcook make ko
+          KO_PREFIX=quay.io/rcook KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
 
   build-scaffold:
     runs-on: ubuntu-20.04
@@ -221,14 +218,10 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: replace the base image
-        run: |
-          bash -c -- "sed -i 's#ghcr.io/chainguard-images/static:latest#registry.access.redhat.com/ubi9/ubi-micro#g' timestamp-authority/.ko.yaml"
-
       - name: build and push tsa
         run: |
           cd timestamp-authority
-          KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook make ko  
+          KO_PREFIX=quay.io/rcook KO_DOCKER_REPO=quay.io/rcook KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko  
 
 
   build-netcat:
