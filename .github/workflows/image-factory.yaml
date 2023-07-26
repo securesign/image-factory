@@ -1,4 +1,4 @@
-name: Sigstore Build and test
+name: Securesign Build and test
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
       - name: Check out the remote fulcio repository
         uses: actions/checkout@v2
         with:
-          repository: sigstore/fulcio
+          repository: securesign/fulcio
           path: fulcio
           ref: v1.3.1
 
@@ -53,7 +53,7 @@ jobs:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
         with:
-          repository: sigstore/rekor
+          repository: securesign/rekor
           path: rekor
           ref: v1.2.2
 
@@ -90,7 +90,7 @@ jobs:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
         with:
-          repository: sigstore/scaffolding
+          repository: securesign/scaffolding
           path: scaffolding
           ref: v0.6.4
 
@@ -164,7 +164,7 @@ jobs:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
         with:
-          repository: sigstore/rekor
+          repository: securesign/rekor
           path: rekor
           ref: v1.2.2
 
@@ -198,7 +198,7 @@ jobs:
       - name: Check out the remote timestamp-authority repository
         uses: actions/checkout@v2
         with:
-          repository: sigstore/timestamp-authority
+          repository: securesign/timestamp-authority
           path: timestamp-authority
           ref: v1.1.1
 
