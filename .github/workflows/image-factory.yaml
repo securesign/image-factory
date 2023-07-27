@@ -194,8 +194,9 @@ jobs:
           ref: v1.5.2
 
       - name: pull down the securesign repo
-         uses: actions/checkout@v2
-         path: securesign
+        uses: actions/checkout@v2
+        with:
+          path: securesign
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
@@ -213,9 +214,10 @@ jobs:
 
       - name: build and push trillian
         run: |
-          cd triillian
+          cd trillian
           cp -rp ../securesign/trillian/* examples/deployment/docker/db_server/
           podman build . --tag quay.io/securesign/trillian-db:v1.5.2 -f examples/deployment/docker/db_server/Dockerfile
+          podman push quay.io/securesign/trillian-db:v1.5.2
 
   build-tsa:
     runs-on: ubuntu-20.04
