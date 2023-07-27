@@ -183,6 +183,40 @@ jobs:
           cd rekor
           KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-trillian
 
+  build-trillian-db:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote trillian repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/trillian
+          path: trillian
+          ref: v1.5.2
+
+      - name: pull down the securesign repo
+         uses: actions/checkout@v2
+         path: securesign
+
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: build and push trillian
+        run: |
+          cd triillian
+          cp -rp ../securesign/trillian/* examples/deployment/docker/db_server/
+          podman build . --tag quay.io/securesign/trillian-db:v1.5.2 -f examples/deployment/docker/db_server/Dockerfile
+
   build-tsa:
     runs-on: ubuntu-20.04
     steps:

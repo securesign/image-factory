@@ -1,0 +1,1 @@
+mysql $mysql_flags $MYSQL_DATABASE < /docker-entrypoint-initdb.d/storage.sql
