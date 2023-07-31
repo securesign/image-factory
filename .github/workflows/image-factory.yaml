@@ -121,9 +121,9 @@ jobs:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
         with:
-          repository: sabre1041/sigstore-scaffolding
+          repository: cooktheryan/scaffolding
           path: scaffolding
-          ref: scaffolding-standalone
+          ref: podman-v065
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
