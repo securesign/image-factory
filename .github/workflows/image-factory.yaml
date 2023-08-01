@@ -64,6 +64,11 @@ jobs:
           username: ${{ secrets.RH_REGISTRY_USER }}
           password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
+      - name: Install go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.20.2"
+
       - name: Build rekor image
         id: build-image
         uses: redhat-actions/buildah-build@v2
