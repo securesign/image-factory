@@ -72,7 +72,6 @@ jobs:
           tags: latest ${{ github.sha }} release-next
           containerfiles: |
             ./Dockerfile
-          context: rekor
 
       - name: Push To quay.io
         id: push-to-quay
