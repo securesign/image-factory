@@ -55,7 +55,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: securesign/rekor
-          path: rekor
           ref: release-next
 
       - name: login to registry.redhat.io
@@ -64,9 +63,6 @@ jobs:
           registry: registry.redhat.io
           username: ${{ secrets.RH_REGISTRY_USER }}
           password: ${{ secrets.RH_REGISTRY_PASSWORD }}
-
-      - name: change to rekor directory
-        run: cd rekor
 
       - name: Build rekor image
         id: build-image
