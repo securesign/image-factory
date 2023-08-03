@@ -45,8 +45,8 @@ jobs:
       - name: build and push fulcio
         run: |
           cd fulcio
-          docker build -t quay.io/securesign/fulcio:v1.3.1 .
-          docker push quay.io/securesign/fulcio:v1.3.1
+          docker build -t quay.io/securesign/fulcio:v1.4.0 .
+          docker push quay.io/securesign/fulcio:v1.4.0
 
   build-rekor:
     runs-on: ubuntu-20.04
