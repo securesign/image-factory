@@ -52,16 +52,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: securesign/rekor
-          path: rekor
-          ref: v1.2.2
-
-      - name: install ko
-        uses: imjasonh/setup-ko@v0.6
-        env:
-          KO_DOCKER_REPO: quay.io/securesign
+          ref: release-next
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
@@ -70,17 +64,32 @@ jobs:
           username: ${{ secrets.RH_REGISTRY_USER }}
           password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-      - name: Login to Quay
-        uses: docker/login-action@v1
+      - name: Install go
+        uses: actions/setup-go@v3
         with:
-          registry: quay.io
+          go-version: "1.20.2"
+
+      - name: Build rekor image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: securesign/rekor
+          tags: latest ${{ github.sha }} release-next
+          containerfiles: |
+            ./Dockerfile
+
+      - name: Push To quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/securesign
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: build and push rekor
-        run: |
-          cd rekor
-          KO_PREFIX=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
+      - name: Print image url
+        run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
 
   build-scaffold:
     runs-on: ubuntu-20.04
@@ -252,7 +261,7 @@ jobs:
       - name: build and push tsa
         run: |
           cd timestamp-authority
-          KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko  
+          KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
 
 
   build-netcat:
@@ -269,7 +278,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: build netcat
-        run: podman build -t quay.io/securesign/netcat:v1.0.0 -f netcat/Dockerfile  
+        run: podman build -t quay.io/securesign/netcat:v1.0.0 -f netcat/Dockerfile
 
       - name: push netcat
         run: podman push quay.io/securesign/netcat:v1.0.0
