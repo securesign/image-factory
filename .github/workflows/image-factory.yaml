@@ -84,7 +84,7 @@ jobs:
         with:
           image: ${{ steps.build-image.outputs.image }}
           tags: ${{ steps.build-image.outputs.tags }}
-          registry: quay.io/quay-user
+          registry: quay.io/securesign
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
