@@ -15,6 +15,7 @@ env:
   TRILLIAN_DB_VER: v1.5.2
   SCAFFOLDING_VER: V0.6.4
   NET_CAT_VER: v1.0.0
+  TSA_VER: v1.1.1
   RUNS_ON: ubuntu-20.04
 
 jobs:
@@ -105,7 +106,7 @@ jobs:
         with:
           repository: securesign/scaffolding
           path: scaffolding
-          ref: v0.6.4
+          ref: $SCAFFOLDING_VER
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
@@ -243,7 +244,7 @@ jobs:
         with:
           repository: securesign/timestamp-authority
           path: timestamp-authority
-          ref: v1.1.1
+          ref: $TSA_VER
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
