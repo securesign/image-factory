@@ -285,7 +285,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: build netcat
-        run: podman build -t quay.io/securesign/netcat:${{ env.NETCAT_VER }} -f netcat/Dockerfile
+        run: podman build -t quay.io/securesign/netcat:${{ env.NET_CAT_VER }} -f netcat/Dockerfile
 
       - name: push netcat
-        run: podman push quay.io/securesign/netcat:${{ env.NETCAT_VER }}
+        run: podman push quay.io/securesign/netcat:${{ env.NET_CAT_VER }}
