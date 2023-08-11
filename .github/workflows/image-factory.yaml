@@ -13,7 +13,7 @@ env:
   FULCIO_VER: "v1.4.0"
   TRILLIAN_VER: "v1.2.2"
   TRILLIAN_DB_VER: "v1.5.2"
-  SCAFFOLDING_VER: "V0.6.4"
+  SCAFFOLDING_VER: "v0.6.4"
   NET_CAT_VER: "v1.0.0"
   TSA_VER: "v1.1.1"
 
@@ -133,7 +133,7 @@ jobs:
           KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
 
   build-tuf:
-    runs-on: ubunutu-20.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
