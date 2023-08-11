@@ -52,8 +52,8 @@ jobs:
       - name: build and push fulcio
         run: |
           cd fulcio
-          docker build -t quay.io/securesign/fulcio:${{ env.FULCIO_VER }} .
-          docker push quay.io/securesign/fulcio:${{ env.FULCIO_VER }}
+          docker build -t quay.io/securesign/fulcio:${FULCIO_VER} .
+          docker push quay.io/securesign/fulcio:${FULCIO_VER}
 
   build-rekor:
     runs-on: ubuntu-20.04
@@ -233,8 +233,8 @@ jobs:
         run: |
           cd trillian
           cp -rp ../securesign/trillian/* examples/deployment/docker/db_server/
-          podman build . --tag quay.io/securesign/trillian-db:${{ env.TRILLIAN_DB_VER }} -f examples/deployment/docker/db_server/Dockerfile
-          podman push quay.io/securesign/trillian-db:${{ env.TRILLIAN_DB_VER }}
+          podman build . --tag quay.io/securesign/trillian-db:${TRILLIAN_DB_VER} -f examples/deployment/docker/db_server/Dockerfile
+          podman push quay.io/securesign/trillian-db:${TRILLIAN_DB_VER}
 
   build-tsa:
     runs-on: ubuntu-20.04
@@ -285,7 +285,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: build netcat
-        run: podman build -t quay.io/securesign/netcat:${{ env.NET_CAT_VER }} -f netcat/Dockerfile
+        run: podman build -t quay.io/securesign/netcat:${NET_CAT_VER} -f netcat/Dockerfile
 
       - name: push netcat
-        run: podman push quay.io/securesign/netcat:${{ env.NET_CAT_VER }}
+        run: podman push quay.io/securesign/netcat:${NET_CAT_VER}
