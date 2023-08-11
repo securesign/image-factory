@@ -23,7 +23,7 @@ jobs:
   build-fulcio:
     env:
       CGO_ENABLED: 1 # CGO is required for podman
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote fulcio repository
         uses: actions/checkout@v2
@@ -56,7 +56,7 @@ jobs:
           docker push quay.io/securesign/fulcio:${{ env.FULCIO_VER }}
 
   build-rekor:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v3
@@ -99,14 +99,14 @@ jobs:
         run: echo "Image pushed to ${{  steps.push-to-quay.outputs.registry-paths }}"
 
   build-scaffold:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
         with:
           repository: securesign/scaffolding
           path: scaffolding
-          ref: $SCAFFOLDING_VER
+          ref: ${{ env.SCAFFOLDING_VER }}
 
       - name: install ko
         uses: imjasonh/setup-ko@v0.6
@@ -133,7 +133,7 @@ jobs:
           KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
 
   build-tuf:
-    runs-on: $RUNS_ON
+    runs-on: ubunutu-20.04
     steps:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
@@ -167,7 +167,7 @@ jobs:
           KO_DOCKER_REPO=quay.io/securesign/tuf  KO_PREFIX=quay.io/securesign/tuf KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
 
   build-trillian:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote rekor repository
         uses: actions/checkout@v2
@@ -201,7 +201,7 @@ jobs:
           KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-trillian
 
   build-trillian-db:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote trillian repository
         uses: actions/checkout@v2
@@ -237,7 +237,7 @@ jobs:
           podman push quay.io/securesign/trillian-db:${{ env.TRILLIAN_DB_VER }}
 
   build-tsa:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the remote timestamp-authority repository
         uses: actions/checkout@v2
@@ -272,7 +272,7 @@ jobs:
 
 
   build-netcat:
-    runs-on: ${{ env.RUNS_ON }}
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
