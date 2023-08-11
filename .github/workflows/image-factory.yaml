@@ -9,14 +9,14 @@ on:
 
 env:
   CGO_ENABLED: 0
-  PODMAN_VER: v4.2.1
-  FULCIO_VER: v1.4.0
-  TRILLIAN_VER: v1.2.2
-  TRILLIAN_DB_VER: v1.5.2
-  SCAFFOLDING_VER: V0.6.4
-  NET_CAT_VER: v1.0.0
-  TSA_VER: v1.1.1
-  RUNS_ON: ubuntu-20.04
+  PODMAN_VER: "v4.2.1"
+  FULCIO_VER: "v1.4.0"
+  TRILLIAN_VER: "v1.2.2"
+  TRILLIAN_DB_VER: "v1.5.2"
+  SCAFFOLDING_VER: "V0.6.4"
+  NET_CAT_VER: "v1.0.0"
+  TSA_VER: "v1.1.1"
+
 
 jobs:
 
