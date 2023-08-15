@@ -16,7 +16,6 @@ env:
   SCAFFOLDING_VER: "v0.6.4"
   NET_CAT_VER: "v1.0.0"
   TSA_VER: "v1.1.1"
-  COSIGN_VER: "v2.1.1"
 
 
 jobs:
@@ -298,7 +297,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: securesign/cosign
-          ref: ${{ env.COSIGN_VER }}
+          ref: v2.1.1
 
       - name: pull down the securesign repo
         uses: actions/checkout@v2
@@ -315,7 +314,7 @@ jobs:
       - name: Build Cosign
         run: | 
           cp -rp ../securesign/cosign/* .
-          podman build . --tag quay.io/${{ secrets.REGISTRY_REPO }}/cosign:${{ env.COSIGN_VER }} -f Dockerfile
+          podman build . --tag quay.io/${{ secrets.REGISTRY_REPO }}/cosign:v2.1.1 -f Dockerfile
 
       - name: Push Cosign
-        run: podman push quay.io/${{ secrets.REGISTRY_REPO }}/cosign:${{ env.COSIGN_VER }}
+        run: podman push quay.io/${{ secrets.REGISTRY_REPO }}/cosign:v2.1.1
