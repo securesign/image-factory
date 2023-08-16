@@ -30,7 +30,7 @@ jobs:
         with:
           repository: securesign/fulcio
           path: fulcio
-          ref: ${{ env.FULCIO_VER }}
+          ref: release-next
 
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
