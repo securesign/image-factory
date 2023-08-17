@@ -20,275 +20,275 @@ env:
 
 jobs:
 
-  # build-fulcio:
-  #   env:
-  #     CGO_ENABLED: 1 # CGO is required for podman
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote fulcio repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: securesign/fulcio
-  #         path: fulcio
-  #         ref: ${{ env.FULCIO_VER }}
+  build-fulcio:
+    env:
+      CGO_ENABLED: 1 # CGO is required for podman
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote fulcio repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/fulcio
+          path: fulcio
+          ref: ${{ env.FULCIO_VER }}
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: replace the fulcio build image
-  #       run: bash -c -- "sed -i 's#golang:1\.[0-9]*\.[0-9]*@sha256:[a-f0-9]*#registry.redhat.io/rhel9/go-toolset@sha256:113e69fdfa23b41ea82e5da2e4a5b13bca44713fe597ff862ef977a4a2fedda5#g' fulcio/Dockerfile"
+      - name: replace the fulcio build image
+        run: bash -c -- "sed -i 's#golang:1\.[0-9]*\.[0-9]*@sha256:[a-f0-9]*#registry.redhat.io/rhel9/go-toolset@sha256:113e69fdfa23b41ea82e5da2e4a5b13bca44713fe597ff862ef977a4a2fedda5#g' fulcio/Dockerfile"
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push fulcio
-  #       run: |
-  #         cd fulcio
-  #         docker build -t quay.io/securesign/fulcio:${FULCIO_VER} .
-  #         docker push quay.io/securesign/fulcio:${FULCIO_VER}
+      - name: build and push fulcio
+        run: |
+          cd fulcio
+          docker build -t quay.io/securesign/fulcio:${FULCIO_VER} .
+          docker push quay.io/securesign/fulcio:${FULCIO_VER}
 
-  # build-rekor:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote rekor repository
-  #       uses: actions/checkout@v3
-  #       with:
-  #         repository: securesign/rekor
-  #         ref: release-next
+  build-rekor:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v3
+        with:
+          repository: securesign/rekor
+          ref: release-next
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Install go
-  #       uses: actions/setup-go@v3
-  #       with:
-  #         go-version: "1.20.2"
+      - name: Install go
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.20.2"
 
-  #     - name: Build rekor image
-  #       id: build-image
-  #       uses: redhat-actions/buildah-build@v2
-  #       with:
-  #         image: securesign/rekor
-  #         tags: latest ${{ github.sha }} release-next
-  #         containerfiles: |
-  #           ./Dockerfile
+      - name: Build rekor image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: securesign/rekor
+          tags: latest ${{ github.sha }} release-next
+          containerfiles: |
+            ./Dockerfile
 
-  #     - name: Push To quay.io
-  #       id: push-to-quay
-  #       uses: redhat-actions/push-to-registry@v2
-  #       with:
-  #         image: ${{ steps.build-image.outputs.image }}
-  #         tags: ${{ steps.build-image.outputs.tags }}
-  #         registry: quay.io/securesign
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Push To quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/securesign
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: Print image url
-  #       run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
+      - name: Print image url
+        run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
 
-  # build-scaffold:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote rekor repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: securesign/scaffolding
-  #         path: scaffolding
-  #         ref: ${{ env.SCAFFOLDING_VER }}
+  build-scaffold:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/scaffolding
+          path: scaffolding
+          ref: ${{ env.SCAFFOLDING_VER }}
 
-  #     - name: install ko
-  #       uses: imjasonh/setup-ko@v0.6
-  #       env:
-  #         KO_DOCKER_REPO: quay.io/securesign
+      - name: install ko
+        uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/securesign
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push scaffolding
-  #       run: |
-  #         cd scaffolding
-  #         KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
+      - name: build and push scaffolding
+        run: |
+          cd scaffolding
+          KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
 
-  # build-tuf:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote rekor repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: sabre1041/sigstore-scaffolding
-  #         path: scaffolding
-  #         ref: scaffolding-standalone
+  build-tuf:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v2
+        with:
+          repository: sabre1041/sigstore-scaffolding
+          path: scaffolding
+          ref: scaffolding-standalone
 
-  #     - name: install ko
-  #       uses: imjasonh/setup-ko@v0.6
-  #       env:
-  #         KO_DOCKER_REPO: quay.io/securesign
+      - name: install ko
+        uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/securesign
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push scaffolding
-  #       run: |
-  #         cd scaffolding
-  #         KO_DOCKER_REPO=quay.io/securesign/tuf  KO_PREFIX=quay.io/securesign/tuf KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
+      - name: build and push scaffolding
+        run: |
+          cd scaffolding
+          KO_DOCKER_REPO=quay.io/securesign/tuf  KO_PREFIX=quay.io/securesign/tuf KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
 
-  # build-trillian:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote rekor repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: securesign/rekor
-  #         path: rekor
-  #         ref: ${{ env.TRILLIAN_VER }}
+  build-trillian:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote rekor repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/rekor
+          path: rekor
+          ref: ${{ env.TRILLIAN_VER }}
 
-  #     - name: install ko
-  #       uses: imjasonh/setup-ko@v0.6
-  #       env:
-  #         KO_DOCKER_REPO: quay.io/securesign
+      - name: install ko
+        uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/securesign
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push trillian
-  #       run: |
-  #         cd rekor
-  #         KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-trillian
+      - name: build and push trillian
+        run: |
+          cd rekor
+          KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-trillian
 
-  # build-trillian-db:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote trillian repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: securesign/trillian
-  #         path: trillian
-  #         ref: ${{ env.TRILLIAN_DB_VER }}
+  build-trillian-db:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote trillian repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/trillian
+          path: trillian
+          ref: ${{ env.TRILLIAN_DB_VER }}
 
-  #     - name: pull down the securesign repo
-  #       uses: actions/checkout@v2
-  #       with:
-  #         path: securesign
+      - name: pull down the securesign repo
+        uses: actions/checkout@v2
+        with:
+          path: securesign
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push trillian
-  #       run: |
-  #         cd trillian
-  #         cp -rp ../securesign/trillian/* examples/deployment/docker/db_server/
-  #         podman build . --tag quay.io/securesign/trillian-db:${TRILLIAN_DB_VER} -f examples/deployment/docker/db_server/Dockerfile
-  #         podman push quay.io/securesign/trillian-db:${TRILLIAN_DB_VER}
+      - name: build and push trillian
+        run: |
+          cd trillian
+          cp -rp ../securesign/trillian/* examples/deployment/docker/db_server/
+          podman build . --tag quay.io/securesign/trillian-db:${TRILLIAN_DB_VER} -f examples/deployment/docker/db_server/Dockerfile
+          podman push quay.io/securesign/trillian-db:${TRILLIAN_DB_VER}
 
-  # build-tsa:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the remote timestamp-authority repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         repository: securesign/timestamp-authority
-  #         path: timestamp-authority
-  #         ref: ${{ env.TSA_VER }}
+  build-tsa:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the remote timestamp-authority repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/timestamp-authority
+          path: timestamp-authority
+          ref: ${{ env.TSA_VER }}
 
-  #     - name: install ko
-  #       uses: imjasonh/setup-ko@v0.6
-  #       env:
-  #         KO_DOCKER_REPO: quay.io/securesign
+      - name: install ko
+        uses: imjasonh/setup-ko@v0.6
+        env:
+          KO_DOCKER_REPO: quay.io/securesign
 
-  #     - name: login to registry.redhat.io
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: registry.redhat.io
-  #         username: ${{ secrets.RH_REGISTRY_USER }}
-  #         password: ${{ secrets.RH_REGISTRY_PASSWORD }}
+      - name: login to registry.redhat.io
+        uses: docker/login-action@v1
+        with:
+          registry: registry.redhat.io
+          username: ${{ secrets.RH_REGISTRY_USER }}
+          password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build and push tsa
-  #       run: |
-  #         cd timestamp-authority
-  #         KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
+      - name: build and push tsa
+        run: |
+          cd timestamp-authority
+          KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
 
 
-  # build-netcat:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Check out the repository
-  #       uses: actions/checkout@v2
+  build-netcat:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
 
-  #     - name: Login to Quay
-  #       uses: docker/login-action@v1
-  #       with:
-  #         registry: quay.io
-  #         username: ${{ secrets.REGISTRY_USER }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: build netcat
-  #       run: podman build -t quay.io/securesign/netcat:${NET_CAT_VER} -f netcat/Dockerfile
+      - name: build netcat
+        run: podman build -t quay.io/securesign/netcat:${NET_CAT_VER} -f netcat/Dockerfile
 
-  #     - name: push netcat
-  #       run: podman push quay.io/securesign/netcat:${NET_CAT_VER}
+      - name: push netcat
+        run: podman push quay.io/securesign/netcat:${NET_CAT_VER}
 
   build-cosign:
     runs-on: ubuntu-20.04
@@ -314,7 +314,7 @@ jobs:
       - name: Build Cosign
         run: |
           cp -rp ${{ github.workspace }}/securesign/cosign/* .
-          podman build . --tag quay.io/${{ secrets.REGISTRY_REPO }}/cosign:${{ env.COSIGN_VER }} -f Dockerfile
+          podman build . --tag quay.io/securesign/cosign:${{ env.COSIGN_VER }} -f Dockerfile
 
       - name: Push Cosign
-        run: podman push quay.io/${{ secrets.REGISTRY_REPO }}/cosign:${{ env.COSIGN_VER }}
+        run: podman push quay.io/securesign/cosign:${{ env.COSIGN_VER }}

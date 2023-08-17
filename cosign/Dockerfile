@@ -9,7 +9,7 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 COPY --from=build-env /cosign/cosign /usr/local/bin/cosign
 RUN chown root:0 /usr/local/bin/cosign && chmod g+wx /usr/local/bin/cosign
 
-#Configure root directory
+#Configure home directory
 ENV HOME=/home
 RUN chgrp -R 0 /${HOME} && chmod -R g=u /${HOME}
 
