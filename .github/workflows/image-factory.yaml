@@ -293,7 +293,7 @@ jobs:
   build-cosign:
     runs-on: ubuntu-20.04
     steps:
-      - name: Check out the Cosign repository 
+      - name: Check out the Cosign repository
         uses: actions/checkout@v2
         with:
           repository: securesign/cosign
@@ -312,7 +312,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build Cosign
-        run: | 
+        run: |
           cp -rp ${{ github.workspace }}/securesign/cosign/* .
           podman build . --tag quay.io/${{ secrets.REGISTRY_REPO }}/cosign:${{ env.COSIGN_VER }} -f Dockerfile
 
