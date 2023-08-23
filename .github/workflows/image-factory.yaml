@@ -16,7 +16,7 @@ env:
   SCAFFOLDING_VER: "v0.6.4"
   NET_CAT_VER: "v1.0.0"
   TSA_VER: "v1.1.1"
-
+  COSIGN_VER: "v2.1.1"
 
 jobs:
 
@@ -289,3 +289,32 @@ jobs:
 
       - name: push netcat
         run: podman push quay.io/securesign/netcat:${NET_CAT_VER}
+
+  build-cosign:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out the Cosign repository
+        uses: actions/checkout@v2
+        with:
+          repository: securesign/cosign
+          ref: ${{ env.COSIGN_VER }}
+
+      - name: Pull down the securesign repo
+        uses: actions/checkout@v2
+        with:
+          path: securesign
+
+      - name: Login to Quay
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build Cosign
+        run: |
+          cp -rp ${{ github.workspace }}/securesign/cosign/* .
+          podman build . --tag quay.io/securesign/cosign:${{ env.COSIGN_VER }} -f Dockerfile
+
+      - name: Push Cosign
+        run: podman push quay.io/securesign/cosign:${{ env.COSIGN_VER }}
