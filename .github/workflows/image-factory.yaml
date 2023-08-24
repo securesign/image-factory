@@ -193,12 +193,12 @@ jobs:
         run: |
           cd trillian
           mv redhat/overlays/log_server/Dockerfile .
-          docker build -t quay.io/securesign/trillian_log_server:${env.TRILLIAN_VER} .
-          docker push quay.io/securesign/trillian_log_server:${envTRILLIAN_VER}
+          docker build -t quay.io/securesign/trillian_log_server:${TRILLIAN_VER} .
+          docker push quay.io/securesign/trillian_log_server:${TRILLIAN_VER}
           mv Dockerfile redhat/overlays/log_server
           mv redhat/overlays/log_signer/Dockerfile .
-          docker build -t quay.io/securesign/trillian_log_signer:${env.TRILLIAN_VER} .
-          docker push quay.io/securesign/trillian_log_signer:${env.TRILLIAN_VER}
+          docker build -t quay.io/securesign/trillian_log_signer:${TRILLIAN_VER} .
+          docker push quay.io/securesign/trillian_log_signer:${TRILLIAN_VER}
 
   build-trillian-db:
     runs-on: ubuntu-20.04
