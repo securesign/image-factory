@@ -192,7 +192,6 @@ jobs:
 
       - name: build and push trillian
         run: |
-          cd trillian
           mv redhat/overlays/log_server/Dockerfile .
           podman build -t quay.io/securesign/trillian_log_server:${TRILLIAN_VER} .
           podman push quay.io/securesign/trillian_log_server:${TRILLIAN_VER}
