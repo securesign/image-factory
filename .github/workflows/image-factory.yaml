@@ -40,9 +40,6 @@ jobs:
           username: ${{ secrets.RH_REGISTRY_USER }}
           password: ${{ secrets.RH_REGISTRY_PASSWORD }}
 
-      - name: replace the fulcio build image
-        run: bash -c -- "sed -i 's#golang:1\.[0-9]*\.[0-9]*@sha256:[a-f0-9]*#registry.redhat.io/rhel9/go-toolset@sha256:113e69fdfa23b41ea82e5da2e4a5b13bca44713fe597ff862ef977a4a2fedda5#g' fulcio/Dockerfile"
-
       - name: Login to Quay
         uses: docker/login-action@v1
         with:
