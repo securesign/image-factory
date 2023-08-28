@@ -15,7 +15,7 @@ env:
   TRILLIAN_DB_VER: "redhat-v1.5.2"
   SCAFFOLDING_VER: "v0.6.4"
   NET_CAT_VER: "v1.0.0"
-  TSA_VER: "v1.1.1"
+  TSA_VER: "redhat-v1.1.2"
   COSIGN_VER: "v2.1.1"
   REKOR_VER: "redhat-v1.2.2"
 
@@ -243,11 +243,6 @@ jobs:
           path: timestamp-authority
           ref: ${{ env.TSA_VER }}
 
-      - name: install ko
-        uses: imjasonh/setup-ko@v0.6
-        env:
-          KO_DOCKER_REPO: quay.io/securesign
-
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
         with:
@@ -262,10 +257,13 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: build and push tsa
+      - name: Build tsa
         run: |
           cd timestamp-authority
-          KO_PREFIX=quay.io/securesign KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko
+          podman build . --tag quay.io/securesign/cosign:${{ env.COSIGN_VER }} -f Dockerfile
+
+      - name: Push tsa
+        run: podman push quay.io/securesign/timestamp-authority:${{ env.TSA_VER }}
 
 
   build-netcat:
