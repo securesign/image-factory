@@ -260,10 +260,10 @@ jobs:
       - name: Build tsa
         run: |
           cd timestamp-authority
-          podman build . --tag quay.io/securesign/cosign:${{ env.COSIGN_VER }} -f Dockerfile
+          podman build . --tag quay.io/securesign/timestamp-server:${{ env.TSA_VER }} -f Dockerfile
 
       - name: Push tsa
-        run: podman push quay.io/securesign/timestamp-authority:${{ env.TSA_VER }}
+        run: podman push quay.io/securesign/timestamp-server:${{ env.TSA_VER }}
 
 
   build-netcat:
