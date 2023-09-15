@@ -99,7 +99,7 @@ jobs:
   build-scaffold:
     runs-on: ubuntu-20.04
     steps:
-      - name: Check out the remote rekor repository
+      - name: Check out the remote scaffolding repository
         uses: actions/checkout@v2
         with:
           repository: securesign/scaffolding
@@ -122,6 +122,7 @@ jobs:
 
       - name: build and push scaffolding
         run: |
+          cd scaffolding
           podman build -t quay.io/securesign/cloudsqlproxy:${SCAFFOLDING_VER} . -f Dockerfile.cloudsqlproxy
           podman push quay.io/securesign/cloudsqlproxy:${SCAFFOLDING_VER}
           podman build -t quay.io/securesign/createcerts:${SCAFFOLDING_VER} . -f Dockerfile.createcerts
