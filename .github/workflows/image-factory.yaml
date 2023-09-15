@@ -13,7 +13,7 @@ env:
   FULCIO_VER: "v1.4.0"
   TRILLIAN_VER: "redhat-v1.5.2"
   TRILLIAN_DB_VER: "redhat-v1.5.2"
-  SCAFFOLDING_VER: "v0.6.4"
+  SCAFFOLDING_VER: "redhat-v0.6.5"
   NET_CAT_VER: "v1.0.0"
   TSA_VER: "redhat-v1.1.2"
   COSIGN_VER: "redhat-v2.1.1"
@@ -106,11 +106,6 @@ jobs:
           path: scaffolding
           ref: ${{ env.SCAFFOLDING_VER }}
 
-      - name: install ko
-        uses: imjasonh/setup-ko@v0.6
-        env:
-          KO_DOCKER_REPO: quay.io/securesign
-
       - name: login to registry.redhat.io
         uses: docker/login-action@v1
         with:
@@ -127,8 +122,20 @@ jobs:
 
       - name: build and push scaffolding
         run: |
-          cd scaffolding
-          KO_DOCKER_REPO=quay.io/securesign KO_DEFAULTBASEIMAGE=registry.access.redhat.com/ubi9/ubi-micro make ko-resolve
+          podman build -t quay.io/securesign/cloudsqlproxy:${SCAFFOLDING_VER} . -f Dockerfile.cloudsqlproxy
+          podman push quay.io/securesign/cloudsqlproxy:${SCAFFOLDING_VER}
+          podman build -t quay.io/securesign/createcerts:${SCAFFOLDING_VER} . -f Dockerfile.createcerts
+          podman push quay.io/securesign/createcerts:${SCAFFOLDING_VER}
+          podman build -t quay.io/securesign/createctconfig:${SCAFFOLDING_VER} . -f Dockerfile.createctconfig
+          podman push quay.io/securesign/createctconfig:${SCAFFOLDING_VER}
+          podman build -t quay.io/securesign/createdb:${SCAFFOLDING_VER} . -f Dockerfile.createdb
+          podman push quay.io/securesign/createdb:${SCAFFOLDING_VER}
+          podman build -t quay.io/securesign/createtree:${SCAFFOLDING_VER} . -f Dockerfile.createtree
+          podman push quay.io/securesign/createcerts:${SCAFFOLDING_VER}
+          podman build -t quay.io/securesign/tuf/server:${SCAFFOLDING_VER} . -f Dockerfile.tuf-server
+          podman push quay.io/securesign/tuf-server:${SCAFFOLDING_VER}
+
+  
 
   build-tuf:
     runs-on: ubuntu-20.04
