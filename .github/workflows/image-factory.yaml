@@ -133,7 +133,7 @@ jobs:
           podman build -t quay.io/securesign/createtree:${SCAFFOLDING_VER} . -f Dockerfile.createtree
           podman push quay.io/securesign/createcerts:${SCAFFOLDING_VER}
           podman build -t quay.io/securesign/tuf/server:${SCAFFOLDING_VER} . -f Dockerfile.tuf-server
-          podman push quay.io/securesign/tuf-server:${SCAFFOLDING_VER}
+          podman push quay.io/securesign/tuf/server:${SCAFFOLDING_VER}
 
   
 
