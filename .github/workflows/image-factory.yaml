@@ -329,9 +329,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build rekor-cli
-        run: |
-          mv redhat/overlays/rekor-cli/* .
-          podman build . --tag quay.io/securesign/rekor-cli:${{ env.REKOR_VER }} -f Dockerfile.cli
+        run: podman build . --tag quay.io/securesign/rekor-cli:${{ env.REKOR_VER }} -f Dockerfile.cli
 
       - name: Push rekor-cli
         run: podman push quay.io/securesign/rekor-cli:${{ env.REKOR_VER }}
